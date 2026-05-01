@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pansy Widget</title>
+<title>Soleil Farm Widget</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -16,425 +16,408 @@
     padding: 12px;
   }
 
+  /* ── SOLEIL FARM COLORS ──
+     Green dark:  #1B3A2D
+     Green mid:   #2A5240
+     Green light: #3D6B52
+     Gold:        #F5C518
+     Gold light:  #FDD835
+     White:       #FFFFFF
+     Cream:       #F0F7F1
+  */
+
   .widget {
     width: 100%;
-    max-width: 480px;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    max-width: 460px;
+    background: linear-gradient(145deg, #1B3A2D 0%, #2A5240 60%, #1B3A2D 100%);
     border-radius: 20px;
-    padding: 24px 28px;
-    color: #f1f5f9;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.08);
+    padding: 22px 26px;
+    color: #F0F7F1;
+    box-shadow: 0 20px 60px rgba(27,58,45,0.5), 0 0 0 1px rgba(245,197,24,0.15);
     position: relative;
     overflow: hidden;
   }
 
+  /* Sunflower glow top-right */
   .widget::before {
     content: '';
     position: absolute;
-    top: -40%;
-    right: -20%;
-    width: 280px;
-    height: 280px;
-    background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(245,197,24,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  /* Bottom left subtle glow */
+  .widget::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(61,107,82,0.3) 0%, transparent 70%);
     pointer-events: none;
   }
 
-  /* TOP ROW */
+  /* BRAND HEADER */
+  .brand-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(245,197,24,0.2);
+  }
+  .brand-icon { font-size: 18px; }
+  .brand-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #F5C518;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #F5C518;
+    margin-left: auto;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 6px rgba(245,197,24,0.6);
+  }
+  @keyframes pulse {
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.4; transform:scale(1.4); }
+  }
+  .live-text { font-size: 10px; color: rgba(245,197,24,0.7); letter-spacing:.06em; }
+
+  /* TOP ROW: Location + Clock */
   .top-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .location-block {}
-  .location {
-    font-size: 12px;
-    color: #64748b;
+  .location-label {
+    font-size: 10px;
+    color: rgba(240,247,241,0.45);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 3px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .loc-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #10b981;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%,100% { opacity:1; transform:scale(1); }
-    50% { opacity:0.5; transform:scale(1.3); }
   }
   .city-name {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    color: #f1f5f9;
+    color: #F0F7F1;
+    line-height: 1.2;
   }
 
-  /* CLOCK */
   .clock-block { text-align: right; }
   .time {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 800;
-    color: #f8fafc;
+    color: #FFFFFF;
     letter-spacing: -2px;
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
-  .time .colon {
+  .colon {
+    color: #F5C518;
     animation: blink 1s step-start infinite;
-    color: #6366f1;
   }
-  @keyframes blink {
-    0%,100% { opacity:1; }
-    50% { opacity:0.3; }
-  }
-  .ampm {
-    font-size: 14px;
-    color: #64748b;
-    font-weight: 500;
-    margin-top: 2px;
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .time-sub {
+    font-size: 11px;
+    color: rgba(240,247,241,0.5);
+    margin-top: 3px;
+    text-align: right;
   }
 
   /* DATE ROW */
   .date-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    gap: 8px;
+    margin-bottom: 18px;
   }
-  .date-badge {
-    background: rgba(99,102,241,0.2);
-    border: 1px solid rgba(99,102,241,0.3);
+  .date-pill {
+    background: rgba(245,197,24,0.15);
+    border: 1px solid rgba(245,197,24,0.35);
     border-radius: 8px;
-    padding: 6px 12px;
+    padding: 5px 12px;
     font-size: 13px;
-    color: #a5b4fc;
-    font-weight: 600;
+    font-weight: 700;
+    color: #F5C518;
   }
-  .weekday {
-    font-size: 14px;
-    color: #94a3b8;
+  .weekday-txt {
+    font-size: 13px;
+    color: rgba(240,247,241,0.6);
+    font-weight: 500;
   }
-  .lunar {
+  .lunar-txt {
     margin-left: auto;
-    font-size: 12px;
-    color: #64748b;
+    font-size: 11px;
+    color: rgba(240,247,241,0.35);
     background: rgba(255,255,255,0.05);
-    padding: 4px 10px;
+    padding: 3px 9px;
     border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.07);
   }
 
-  /* WEATHER ROW */
+  /* WEATHER MAIN */
   .weather-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(245,197,24,0.12);
+    border-radius: 14px;
+    margin-bottom: 14px;
   }
-
-  .weather-main {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .weather-icon {
-    font-size: 42px;
+  .weather-left { display: flex; align-items: center; gap: 14px; }
+  .w-icon {
+    font-size: 44px;
     line-height: 1;
-    filter: drop-shadow(0 0 12px rgba(251,191,36,0.4));
+    filter: drop-shadow(0 0 14px rgba(245,197,24,0.35));
   }
-  .temp-block {}
-  .temp {
-    font-size: 36px;
+  .temp-big {
+    font-size: 38px;
     font-weight: 800;
-    color: #f8fafc;
+    color: #F5C518;
     line-height: 1;
     letter-spacing: -1px;
   }
-  .weather-desc {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-top: 3px;
-  }
-  .feels {
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 2px;
-  }
+  .w-desc { font-size: 12px; color: rgba(240,247,241,0.6); margin-top: 3px; }
+  .w-feels { font-size: 11px; color: rgba(240,247,241,0.35); margin-top: 2px; }
 
-  /* WEATHER DETAILS */
-  .weather-details {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-end;
-  }
+  .weather-right { display: flex; flex-direction: column; gap: 7px; align-items: flex-end; }
   .detail-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #64748b;
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: rgba(240,247,241,0.5);
   }
-  .detail-val {
-    color: #94a3b8;
-    font-weight: 600;
-  }
+  .detail-val { color: rgba(240,247,241,0.85); font-weight: 600; }
 
   /* FORECAST */
   .forecast {
     display: flex;
-    gap: 8px;
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255,255,255,0.07);
+    gap: 7px;
+    margin-bottom: 14px;
   }
-  .forecast-item {
+  .fc-item {
     flex: 1;
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.07);
     border-radius: 10px;
     padding: 10px 6px;
     text-align: center;
+    transition: background .15s;
   }
-  .fc-day { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing:.08em; margin-bottom: 5px; }
-  .fc-icon { font-size: 20px; margin-bottom: 4px; }
-  .fc-temp { font-size: 13px; font-weight: 700; color: #e2e8f0; }
-  .fc-low { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .fc-item:hover { background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.2); }
+  .fc-day { font-size: 10px; color: rgba(240,247,241,0.4); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+  .fc-icon { font-size: 18px; margin-bottom: 4px; }
+  .fc-hi { font-size: 13px; font-weight: 700; color: #F5C518; }
+  .fc-lo { font-size: 10px; color: rgba(240,247,241,0.35); margin-top:2px; }
 
-  /* STATUS BAR */
+  /* STATUS */
   .status-bar {
     display: flex;
     justify-content: space-between;
-    margin-top: 14px;
     font-size: 10px;
-    color: #334155;
+    color: rgba(240,247,241,0.25);
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
   }
+  .status-brand { color: rgba(245,197,24,0.4); font-weight:600; letter-spacing:.05em; }
 
-  /* LOADING */
-  .loading { text-align:center; padding: 30px; color: #64748b; font-size: 14px; }
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(240,247,241,0.5);
+    font-size: 14px;
+  }
   .spinner {
-    width: 24px; height: 24px;
-    border: 2px solid #1e293b;
-    border-top-color: #6366f1;
+    width: 28px; height: 28px;
+    border: 2px solid rgba(245,197,24,0.15);
+    border-top-color: #F5C518;
     border-radius: 50%;
     animation: spin .8s linear infinite;
-    margin: 0 auto 10px;
+    margin: 0 auto 12px;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error-msg {
-    text-align: center;
-    padding: 12px;
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.2);
-    border-radius: 10px;
-    font-size: 12px;
-    color: #fca5a5;
-    margin-top: 12px;
-  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 </style>
 </head>
 <body>
 <div class="widget" id="widget">
   <div class="loading">
     <div class="spinner"></div>
-    Đang tải vị trí & thời tiết...
+    Đang xác định vị trí...
   </div>
 </div>
 
 <script>
 const VI_DAYS = ["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
-const VI_MONTHS = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
-const SHORT_DAYS = ["CN","T2","T3","T4","T5","T6","T7"];
+const SHORT = ["CN","T2","T3","T4","T5","T6","T7"];
 
 const WMO_ICONS = {
-  0:"☀️",1:"🌤",2:"⛅",3:"☁️",
-  45:"🌫",48:"🌫",
-  51:"🌦",53:"🌦",55:"🌧",
-  61:"🌧",63:"🌧",65:"🌧",
-  71:"🌨",73:"🌨",75:"❄️",
-  80:"🌦",81:"🌧",82:"⛈",
-  95:"⛈",96:"⛈",99:"⛈"
+  0:"☀️",1:"🌤",2:"⛅",3:"☁️",45:"🌫",48:"🌫",
+  51:"🌦",53:"🌦",55:"🌧",61:"🌧",63:"🌧",65:"🌧",
+  71:"🌨",73:"🌨",75:"❄️",80:"🌦",81:"🌧",82:"⛈",95:"⛈",99:"⛈"
 };
 const WMO_DESC = {
   0:"Trời quang",1:"Chủ yếu quang",2:"Có mây rải rác",3:"Nhiều mây",
-  45:"Sương mù",48:"Sương mù",
-  51:"Mưa phùn",53:"Mưa phùn vừa",55:"Mưa phùn dày",
-  61:"Mưa nhẹ",63:"Mưa vừa",65:"Mưa lớn",
-  71:"Tuyết nhẹ",73:"Tuyết vừa",75:"Bão tuyết",
-  80:"Mưa rào",81:"Mưa rào vừa",82:"Mưa rào mạnh",
-  95:"Dông bão",96:"Dông kèm mưa đá",99:"Dông mạnh"
+  45:"Sương mù",48:"Sương mù",51:"Mưa phùn",53:"Mưa phùn",55:"Mưa phùn dày",
+  61:"Mưa nhẹ",63:"Mưa vừa",65:"Mưa lớn",80:"Mưa rào",81:"Mưa rào vừa",
+  82:"Mưa rào mạnh",95:"Dông bão",99:"Dông mạnh"
 };
-
-let cityName = "Đang xác định...";
-let weatherData = null;
-let clockInterval = null;
 
 function pad(n){ return String(n).padStart(2,'0'); }
 
-function updateClock(){
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-  const s = now.getSeconds();
-  const ampm = h >= 12 ? "PM" : "AM";
-  const h12 = h % 12 || 12;
-
-  const el = document.getElementById('time-display');
-  if(el) el.innerHTML = `${pad(h12)}<span class="colon">:</span>${pad(m)}`;
-
-  const ampmEl = document.getElementById('ampm-display');
-  if(ampmEl) ampmEl.textContent = `${ampm} · ${pad(s)}s`;
-
-  const now2 = new Date();
-  const day = VI_DAYS[now2.getDay()];
-  const date = now2.getDate();
-  const month = now2.getMonth()+1;
-  const year = now2.getFullYear();
-
-  const dateEl = document.getElementById('date-badge');
-  if(dateEl) dateEl.textContent = `${pad(date)}/${pad(month)}/${year}`;
-
-  const dayEl = document.getElementById('weekday-display');
-  if(dayEl) dayEl.textContent = day;
+function getLunar(date){
+  const offset = Math.floor((date - new Date('2000-01-06')) / 86400000);
+  const ld = Math.floor(offset % 29.5) + 1;
+  const lm = Math.floor((offset / 29.5) % 12) + 1;
+  return `Âm ${pad(Math.min(ld,29))}/${pad(lm)}`;
 }
 
-function renderWidget(){
-  if(!weatherData){ return; }
-  const w = weatherData;
+let clockTimer = null;
+function updateClock(){
   const now = new Date();
-  const h = now.getHours();
-  const h12 = h%12||12;
-  const ampm = h>=12?"PM":"AM";
-  const s = now.getSeconds();
+  const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const h12 = h%12||12, ampm = h>=12?"PM":"AM";
+  const el = document.getElementById('t-time');
+  if(el) el.innerHTML = `${pad(h12)}<span class="colon">:</span>${pad(m)}`;
+  const s2 = document.getElementById('t-sub');
+  if(s2) s2.textContent = `${ampm} · ${pad(s)}s · ${VI_DAYS[now.getDay()]}`;
+  const db = document.getElementById('t-date');
+  if(db) db.textContent = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
+  const wd = document.getElementById('t-weekday');
+  if(wd) wd.textContent = VI_DAYS[now.getDay()];
+  const ln = document.getElementById('t-lunar');
+  if(ln) ln.textContent = getLunar(now);
+}
 
-  const icon = WMO_ICONS[w.current.weather_code] || "🌡";
-  const desc = WMO_DESC[w.current.weather_code] || "N/A";
-  const temp = Math.round(w.current.temperature_2m);
-  const feels = Math.round(w.current.apparent_temperature);
-  const humidity = w.current.relative_humidity_2m;
-  const wind = Math.round(w.current.wind_speed_10m);
+let cityName = "Đang xác định...";
+let wx = null;
 
-  // Forecast next 4 days
+function render(){
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const h12 = h%12||12, ampm = h>=12?"PM":"AM";
+  const icon = WMO_ICONS[wx.current.weather_code]||"🌡";
+  const desc = WMO_DESC[wx.current.weather_code]||"";
+  const temp = Math.round(wx.current.temperature_2m);
+  const feels = Math.round(wx.current.apparent_temperature);
+  const hum = wx.current.relative_humidity_2m;
+  const wind = Math.round(wx.current.wind_speed_10m);
+
   const fcDays = [];
-  for(let i=1; i<=4; i++){
-    const d = new Date();
-    d.setDate(d.getDate()+i);
+  for(let i=1;i<=4;i++){
+    const d=new Date(); d.setDate(d.getDate()+i);
     fcDays.push({
-      day: SHORT_DAYS[d.getDay()],
-      icon: WMO_ICONS[w.daily.weather_code[i]] || "🌡",
-      high: Math.round(w.daily.temperature_2m_max[i]),
-      low:  Math.round(w.daily.temperature_2m_min[i]),
+      day: SHORT[d.getDay()],
+      icon: WMO_ICONS[wx.daily.weather_code[i]]||"🌡",
+      hi: Math.round(wx.daily.temperature_2m_max[i]),
+      lo: Math.round(wx.daily.temperature_2m_min[i]),
     });
   }
 
-  // Lunar approx (simple offset)
-  function getLunar(date){
-    const lunarOffset = Math.floor((date - new Date('2000-01-06')) / 86400000 % 29.5);
-    const ld = Math.floor(lunarOffset)+1;
-    const lm = Math.floor(((date - new Date('2000-01-06'))/86400000)/29.5 % 12)+1;
-    return `Âm ${pad(ld)}/${pad(lm)}`;
-  }
-
   document.getElementById('widget').innerHTML = `
+    <div class="brand-bar">
+      <div class="brand-icon">🌻</div>
+      <div class="brand-name">Soleil Farm</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+        <div class="live-text">LIVE</div>
+        <div class="live-dot"></div>
+      </div>
+    </div>
+
     <div class="top-row">
       <div class="location-block">
-        <div class="location"><div class="loc-dot"></div> Vị trí của bạn</div>
+        <div class="location-label">📍 Vị trí</div>
         <div class="city-name">${cityName}</div>
       </div>
       <div class="clock-block">
-        <div class="time" id="time-display">${pad(h12)}<span class="colon">:</span>${pad(now.getMinutes())}</div>
-        <div class="ampm" id="ampm-display">${ampm} · ${pad(s)}s</div>
+        <div class="time" id="t-time">${pad(h12)}<span class="colon">:</span>${pad(m)}</div>
+        <div class="time-sub" id="t-sub">${ampm} · ${pad(s)}s · ${VI_DAYS[now.getDay()]}</div>
       </div>
     </div>
 
     <div class="date-row">
-      <div class="date-badge" id="date-badge">${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}</div>
-      <div class="weekday" id="weekday-display">${VI_DAYS[now.getDay()]}</div>
-      <div class="lunar">${getLunar(now)}</div>
+      <div class="date-pill" id="t-date">${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}</div>
+      <div class="weekday-txt" id="t-weekday">${VI_DAYS[now.getDay()]}</div>
+      <div class="lunar-txt" id="t-lunar">${getLunar(now)}</div>
     </div>
 
     <div class="weather-row">
-      <div class="weather-main">
-        <div class="weather-icon">${icon}</div>
-        <div class="temp-block">
-          <div class="temp">${temp}°C</div>
-          <div class="weather-desc">${desc}</div>
-          <div class="feels">Cảm giác như ${feels}°C</div>
+      <div class="weather-left">
+        <div class="w-icon">${icon}</div>
+        <div>
+          <div class="temp-big">${temp}°C</div>
+          <div class="w-desc">${desc}</div>
+          <div class="w-feels">Cảm giác ${feels}°C</div>
         </div>
       </div>
-      <div class="weather-details">
-        <div class="detail-item">💧 <span class="detail-val">${humidity}%</span> độ ẩm</div>
-        <div class="detail-item">💨 <span class="detail-val">${wind} km/h</span> gió</div>
-        <div class="detail-item">📅 <span class="detail-val">${Math.round(w.daily.temperature_2m_max[0])}° / ${Math.round(w.daily.temperature_2m_min[0])}°</span> hôm nay</div>
+      <div class="weather-right">
+        <div class="detail-item">💧 <span class="detail-val">${hum}%</span></div>
+        <div class="detail-item">💨 <span class="detail-val">${wind} km/h</span></div>
+        <div class="detail-item">📊 <span class="detail-val">${Math.round(wx.daily.temperature_2m_max[0])}°/${Math.round(wx.daily.temperature_2m_min[0])}°</span></div>
       </div>
     </div>
 
     <div class="forecast">
       ${fcDays.map(f=>`
-        <div class="forecast-item">
+        <div class="fc-item">
           <div class="fc-day">${f.day}</div>
           <div class="fc-icon">${f.icon}</div>
-          <div class="fc-temp">${f.high}°</div>
-          <div class="fc-low">${f.low}°</div>
+          <div class="fc-hi">${f.hi}°</div>
+          <div class="fc-lo">${f.lo}°</div>
         </div>
       `).join('')}
     </div>
 
     <div class="status-bar">
-      <span>Cập nhật: ${pad(now.getHours())}:${pad(now.getMinutes())}</span>
-      <span>Open-Meteo API · Miễn phí</span>
+      <span>Cập nhật ${pad(now.getHours())}:${pad(now.getMinutes())}</span>
+      <span class="status-brand">🌻 SOLEIL FARM · PANSY</span>
     </div>
   `;
 
-  if(clockInterval) clearInterval(clockInterval);
-  clockInterval = setInterval(updateClock, 1000);
+  if(clockTimer) clearInterval(clockTimer);
+  clockTimer = setInterval(updateClock, 1000);
 }
 
-async function getCity(lat, lon){
-  try {
+async function getCity(lat,lon){
+  try{
     const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
     const d = await r.json();
-    const addr = d.address;
-    cityName = addr.city || addr.town || addr.village || addr.county || "Vị trí của bạn";
-    const state = addr.state || "";
-    if(state && !cityName.includes(state)) cityName += ", " + state;
-  } catch(e){
-    cityName = "Việt Nam";
-  }
+    const a = d.address;
+    cityName = a.city||a.town||a.village||a.county||"Việt Nam";
+  }catch(e){ cityName = "TP. Hồ Chí Minh"; }
 }
 
-async function getWeather(lat, lon){
+async function getWeather(lat,lon){
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
   const r = await fetch(url);
-  weatherData = await r.json();
+  wx = await r.json();
 }
 
 async function init(){
   if(!navigator.geolocation){
-    // Fallback: Ho Chi Minh City
-    await loadWithCoords(10.7769, 106.7009, "TP. Hồ Chí Minh");
-    return;
+    cityName="TP. Hồ Chí Minh";
+    await getWeather(10.7769,106.7009);
+    render(); return;
   }
   navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const {latitude:lat, longitude:lon} = pos.coords;
-      await Promise.all([getCity(lat,lon), getWeather(lat,lon)]);
-      renderWidget();
+    async pos=>{
+      const {latitude:la,longitude:lo}=pos.coords;
+      await Promise.all([getCity(la,lo),getWeather(la,lo)]);
+      render();
     },
-    async () => {
-      // Permission denied → default to HCMC
-      cityName = "TP. Hồ Chí Minh";
-      await getWeather(10.7769, 106.7009);
-      renderWidget();
+    async ()=>{
+      cityName="TP. Hồ Chí Minh";
+      await getWeather(10.7769,106.7009);
+      render();
     },
-    { timeout: 8000 }
+    {timeout:8000}
   );
 }
 
