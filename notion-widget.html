@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pansy Widget</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 12px;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 480px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    border-radius: 20px;
+    padding: 24px 28px;
+    color: #f1f5f9;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .widget::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* TOP ROW */
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .location-block {}
+  .location {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .loc-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(1.3); }
+  }
+  .city-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+
+  /* CLOCK */
+  .clock-block { text-align: right; }
+  .time {
+    font-size: 42px;
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -2px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .time .colon {
+    animation: blink 1s step-start infinite;
+    color: #6366f1;
+  }
+  @keyframes blink {
+    0%,100% { opacity:1; }
+    50% { opacity:0.3; }
+  }
+  .ampm {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* DATE ROW */
+  .date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .date-badge {
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #a5b4fc;
+    font-weight: 600;
+  }
+  .weekday {
+    font-size: 14px;
+    color: #94a3b8;
+  }
+  .lunar {
+    margin-left: auto;
+    font-size: 12px;
+    color: #64748b;
+    background: rgba(255,255,255,0.05);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* WEATHER ROW */
+  .weather-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .weather-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .weather-icon {
+    font-size: 42px;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(251,191,36,0.4));
+  }
+  .temp-block {}
+  .temp {
+    font-size: 36px;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .weather-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 3px;
+  }
+  .feels {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* WEATHER DETAILS */
+  .weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #64748b;
+  }
+  .detail-val {
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  /* FORECAST */
+  .forecast {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .forecast-item {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .fc-day { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing:.08em; margin-bottom: 5px; }
+  .fc-icon { font-size: 20px; margin-bottom: 4px; }
+  .fc-temp { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .fc-low { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-size: 10px;
+    color: #334155;
+  }
+
+  /* LOADING */
+  .loading { text-align:center; padding: 30px; color: #64748b; font-size: 14px; }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid #1e293b;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    text-align: center;
+    padding: 12px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #fca5a5;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="widget" id="widget">
+  <div class="loading">
+    <div class="spinner"></div>
+    Đang tải vị trí & thời tiết...
+  </div>
+</div>
+
+<script>
+const VI_DAYS = ["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
+const VI_MONTHS = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
+const SHORT_DAYS = ["CN","T2","T3","T4","T5","T6","T7"];
+
+const WMO_ICONS = {
+  0:"☀️",1:"🌤",2:"⛅",3:"☁️",
+  45:"🌫",48:"🌫",
+  51:"🌦",53:"🌦",55:"🌧",
+  61:"🌧",63:"🌧",65:"🌧",
+  71:"🌨",73:"🌨",75:"❄️",
+  80:"🌦",81:"🌧",82:"⛈",
+  95:"⛈",96:"⛈",99:"⛈"
+};
+const WMO_DESC = {
+  0:"Trời quang",1:"Chủ yếu quang",2:"Có mây rải rác",3:"Nhiều mây",
+  45:"Sương mù",48:"Sương mù",
+  51:"Mưa phùn",53:"Mưa phùn vừa",55:"Mưa phùn dày",
+  61:"Mưa nhẹ",63:"Mưa vừa",65:"Mưa lớn",
+  71:"Tuyết nhẹ",73:"Tuyết vừa",75:"Bão tuyết",
+  80:"Mưa rào",81:"Mưa rào vừa",82:"Mưa rào mạnh",
+  95:"Dông bão",96:"Dông kèm mưa đá",99:"Dông mạnh"
+};
+
+let cityName = "Đang xác định...";
+let weatherData = null;
+let clockInterval = null;
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function updateClock(){
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const s = now.getSeconds();
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+
+  const el = document.getElementById('time-display');
+  if(el) el.innerHTML = `${pad(h12)}<span class="colon">:</span>${pad(m)}`;
+
+  const ampmEl = document.getElementById('ampm-display');
+  if(ampmEl) ampmEl.textContent = `${ampm} · ${pad(s)}s`;
+
+  const now2 = new Date();
+  const day = VI_DAYS[now2.getDay()];
+  const date = now2.getDate();
+  const month = now2.getMonth()+1;
+  const year = now2.getFullYear();
+
+  const dateEl = document.getElementById('date-badge');
+  if(dateEl) dateEl.textContent = `${pad(date)}/${pad(month)}/${year}`;
+
+  const dayEl = document.getElementById('weekday-display');
+  if(dayEl) dayEl.textContent = day;
+}
+
+function renderWidget(){
+  if(!weatherData){ return; }
+  const w = weatherData;
+  const now = new Date();
+  const h = now.getHours();
+  const h12 = h%12||12;
+  const ampm = h>=12?"PM":"AM";
+  const s = now.getSeconds();
+
+  const icon = WMO_ICONS[w.current.weather_code] || "🌡";
+  const desc = WMO_DESC[w.current.weather_code] || "N/A";
+  const temp = Math.round(w.current.temperature_2m);
+  const feels = Math.round(w.current.apparent_temperature);
+  const humidity = w.current.relative_humidity_2m;
+  const wind = Math.round(w.current.wind_speed_10m);
+
+  // Forecast next 4 days
+  const fcDays = [];
+  for(let i=1; i<=4; i++){
+    const d = new Date();
+    d.setDate(d.getDate()+i);
+    fcDays.push({
+      day: SHORT_DAYS[d.getDay()],
+      icon: WMO_ICONS[w.daily.weather_code[i]] || "🌡",
+      high: Math.round(w.daily.temperature_2m_max[i]),
+      low:  Math.round(w.daily.temperature_2m_min[i]),
+    });
+  }
+
+  // Lunar approx (simple offset)
+  function getLunar(date){
+    const lunarOffset = Math.floor((date - new Date('2000-01-06')) / 86400000 % 29.5);
+    const ld = Math.floor(lunarOffset)+1;
+    const lm = Math.floor(((date - new Date('2000-01-06'))/86400000)/29.5 % 12)+1;
+    return `Âm ${pad(ld)}/${pad(lm)}`;
+  }
+
+  document.getElementById('widget').innerHTML = `
+    <div class="top-row">
+      <div class="location-block">
+        <div class="location"><div class="loc-dot"></div> Vị trí của bạn</div>
+        <div class="city-name">${cityName}</div>
+      </div>
+      <div class="clock-block">
+        <div class="time" id="time-display">${pad(h12)}<span class="colon">:</span>${pad(now.getMinutes())}</div>
+        <div class="ampm" id="ampm-display">${ampm} · ${pad(s)}s</div>
+      </div>
+    </div>
+
+    <div class="date-row">
+      <div class="date-badge" id="date-badge">${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}</div>
+      <div class="weekday" id="weekday-display">${VI_DAYS[now.getDay()]}</div>
+      <div class="lunar">${getLunar(now)}</div>
+    </div>
+
+    <div class="weather-row">
+      <div class="weather-main">
+        <div class="weather-icon">${icon}</div>
+        <div class="temp-block">
+          <div class="temp">${temp}°C</div>
+          <div class="weather-desc">${desc}</div>
+          <div class="feels">Cảm giác như ${feels}°C</div>
+        </div>
+      </div>
+      <div class="weather-details">
+        <div class="detail-item">💧 <span class="detail-val">${humidity}%</span> độ ẩm</div>
+        <div class="detail-item">💨 <span class="detail-val">${wind} km/h</span> gió</div>
+        <div class="detail-item">📅 <span class="detail-val">${Math.round(w.daily.temperature_2m_max[0])}° / ${Math.round(w.daily.temperature_2m_min[0])}°</span> hôm nay</div>
+      </div>
+    </div>
+
+    <div class="forecast">
+      ${fcDays.map(f=>`
+        <div class="forecast-item">
+          <div class="fc-day">${f.day}</div>
+          <div class="fc-icon">${f.icon}</div>
+          <div class="fc-temp">${f.high}°</div>
+          <div class="fc-low">${f.low}°</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="status-bar">
+      <span>Cập nhật: ${pad(now.getHours())}:${pad(now.getMinutes())}</span>
+      <span>Open-Meteo API · Miễn phí</span>
+    </div>
+  `;
+
+  if(clockInterval) clearInterval(clockInterval);
+  clockInterval = setInterval(updateClock, 1000);
+}
+
+async function getCity(lat, lon){
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+    const d = await r.json();
+    const addr = d.address;
+    cityName = addr.city || addr.town || addr.village || addr.county || "Vị trí của bạn";
+    const state = addr.state || "";
+    if(state && !cityName.includes(state)) cityName += ", " + state;
+  } catch(e){
+    cityName = "Việt Nam";
+  }
+}
+
+async function getWeather(lat, lon){
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
+  const r = await fetch(url);
+  weatherData = await r.json();
+}
+
+async function init(){
+  if(!navigator.geolocation){
+    // Fallback: Ho Chi Minh City
+    await loadWithCoords(10.7769, 106.7009, "TP. Hồ Chí Minh");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const {latitude:lat, longitude:lon} = pos.coords;
+      await Promise.all([getCity(lat,lon), getWeather(lat,lon)]);
+      renderWidget();
+    },
+    async () => {
+      // Permission denied → default to HCMC
+      cityName = "TP. Hồ Chí Minh";
+      await getWeather(10.7769, 106.7009);
+      renderWidget();
+    },
+    { timeout: 8000 }
+  );
+}
+
+init();
+</script>
+</body>
+</html>
